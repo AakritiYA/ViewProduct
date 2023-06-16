@@ -1,41 +1,45 @@
 package com.springrest.demo.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "attribute")
 public class ProductAttribute {
-
 	 @Id
-	 private long id;
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
+	 private Long attributeid;
+	 
+	 @ManyToOne
+	 private Product product;
+
 	 private String color;
 	 private String size;
 	 
-	 @ManyToOne
-	 @JoinColumn(name = "Product_Id")
-	 private Product product;
-	 
-	 public ProductAttribute(long id, String color, String size, Product product) {
+	 public ProductAttribute(String size, String color) {
 	        super();
-	        this.id = id;
-	        this.color = color;
-	        this.size = size;
+	        this.setSize(size);
+	        this.setColor(color);
 	    }
 
-	 public ProductAttribute() {
+	
+
+	public ProductAttribute() {
 		 super();
 	 }
-
-	public long getId() {
-		return id;
+	 
+	 public Long getAttributeid() {
+		return attributeid;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setAttributeid(Long attributeid) {
+		this.attributeid = attributeid;
 	}
-
+	
 	public String getColor() {
 		return color;
 	}
@@ -51,12 +55,17 @@ public class ProductAttribute {
 	public void setSize(String size) {
 		this.size = size;
 	}
-
-
-	@Override
-	public String toString() {
-		return "ProductAttribute [id=" + id + ", color=" + color + ", size=" + size + "]";
-	}
+	
+	 @Override
+	 public String toString() {
+		return "ProductAttribute [attributeid=" + attributeid + ", color=" + color + ", size=" + size + "]";
+		}
 	 
-	 
+	 public void setProduct(Product product) {
+	        this.product = product;
+	    }
+
+	    public Product getProduct() {
+	        return product;
+	    }
 }
