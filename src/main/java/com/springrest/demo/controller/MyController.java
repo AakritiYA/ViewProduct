@@ -36,7 +36,6 @@ public class MyController {
         String query = "SELECT * FROM product " +
                 "JOIN category ON product.category_id = category.id " +
                 "WHERE title = :title AND level1 = :category_name;";
-
         TypedQuery<Product> typedQuery = entityManager.createQuery(query, Product.class);
         typedQuery.setParameter("title", title);
         typedQuery.setParameter("category_name", level1);
