@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springrest.demo.entities.Product;
@@ -25,6 +26,21 @@ public class MyController {
         TypedQuery<Product> query = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o",
                 Product.class);
         return query.getResultList();
+    }
+    
+      @GetMapping("/products/title/category_name")
+      public Product getProductByTitleAndCategoryId(
+            @RequestParam("title") String title,
+            @RequestParam("category_name") String level1) {
+        EntityManager entityManager = DBUtility.getEntityManager();
+        String query = "SELECT * FROM product " +
+                "JOIN category ON product.category_id = category.id " +
+                "WHERE title = :title AND level1 = :category_name;";
+
+        TypedQuery<Product> typedQuery = entityManager.createQuery(query, Product.class);
+        typedQuery.setParameter("title", title);
+        typedQuery.setParameter("category_name", level1);
+        return typedQuery.getSingleResult();
     }
 
     @GetMapping("/products/{productId}")
