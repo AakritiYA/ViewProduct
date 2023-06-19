@@ -1,0 +1,4 @@
+SELECT *
+FROM product
+join category on product.category_id=category.id
+WHERE title = 'Shirt' AND category_id=1;
