@@ -30,8 +30,8 @@ public class MyController {
     
       @GetMapping("/products/title/category_name")
       public Product getProductByTitleAndCategoryId(
-            @RequestParam("title") String title,
-            @RequestParam("category_name") String level1) {
+    		  @PathVariable("title") String title,
+    	      @PathVariable("category_name") String level1) {
         EntityManager entityManager = DBUtility.getEntityManager();
         String query = "SELECT * FROM product " +
                 "JOIN category ON product.category_id = category.id " +
