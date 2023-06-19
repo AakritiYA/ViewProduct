@@ -42,7 +42,7 @@ public class MyController {
         typedQuery.setParameter("category_name", level1);
         return typedQuery.getSingleResult();
     }
-
+      
     @GetMapping("/products/{productId}")
     public Product getProductById(@PathVariable Long id) {
     	EntityManager entityManager= DBUtility.getEntityManager();
