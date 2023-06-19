@@ -3,6 +3,8 @@ package com.springrest.demo.controller;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +18,8 @@ import com.springrest.demo.util.DBUtility;
 
 @RestController
 public class MyController {
-
-    @GetMapping("/products")
+	
+    @GetMapping("products")
     public List<Product> getAllProducts() {
     	EntityManager entityManager = DBUtility.getEntityManager();
         TypedQuery<Product> query = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o",
@@ -32,12 +34,26 @@ public class MyController {
     }
 
 	@PostMapping("/products")
-    public Product addProduct(@RequestBody Product product) {
-		EntityManager entityManager = DBUtility.getEntityManager();
-	    entityManager.getTransaction().begin();
-		entityManager.persist(product);
-		entityManager.getTransaction().commit();
-		return product;
-    }
+	public Product addProduct(@RequestBody Product product) {
+	    EntityManager entityManager = null;
+	    EntityTransaction transaction = null;
+	    try {
+	        entityManager = DBUtility.getEntityManager();
+	        transaction = entityManager.getTransaction();
+	        transaction.begin();
+	        entityManager.persist(product);
+	        transaction.commit();
+	    } catch (RollbackException e) {
+	    	if (transaction != null && transaction.isActive()) {
+	            transaction.rollback();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        if (entityManager != null && entityManager.isOpen()) {
+	            entityManager.close();
+	        }
+	    }
+	    return product;
+	}
 	
 }
