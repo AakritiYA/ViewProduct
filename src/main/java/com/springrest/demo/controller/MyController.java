@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springrest.demo.entities.Product;
@@ -28,17 +27,20 @@ public class MyController {
         return query.getResultList();
     }
     
-      @GetMapping("/products/title/category_name")
+//    String sql = "SELECT level2 FROM category WHERE level1 = 'Clothing' AND level2 IS NOT NULL";
+
+      @GetMapping("/products/{level1}/{level2}")
       public Product getProductByTitleAndCategoryId(
-    		  @PathVariable("title") String title,
-    	      @PathVariable("category_name") String level1) {
+    		  @PathVariable("level1") String level1,
+    	      @PathVariable("level2") String level2) {
+    	  
         EntityManager entityManager = DBUtility.getEntityManager();
-        String query = "SELECT * FROM product " +
+        String query1 = "SELECT * FROM product " +
                 "JOIN category ON product.category_id = category.id " +
-                "WHERE title = :title AND level1 = :category_name;";
-        TypedQuery<Product> typedQuery = entityManager.createQuery(query, Product.class);
-        typedQuery.setParameter("title", title);
-        typedQuery.setParameter("category_name", level1);
+                "WHERE level1 = :level1 AND level2 = :level2;";
+        TypedQuery<Product> typedQuery = entityManager.createQuery(query1, Product.class);
+        typedQuery.setParameter("level1", level1);
+        typedQuery.setParameter("level2", level2);
         return typedQuery.getSingleResult();
     }
       
