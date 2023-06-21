@@ -6,11 +6,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.springrest.demo.entities.Category;
 import com.springrest.demo.entities.Product;
 import com.springrest.demo.util.DBUtility;
 
@@ -21,10 +24,10 @@ public class MyController {
 	public List<Product> getAllProducts() {
 		EntityManager entityManager = null;
 		List<Product> productList = null;
+		TypedQuery<Product> query = null;
 		try {
 			entityManager = DBUtility.getEntityManager();
-			TypedQuery<Product> query = entityManager
-					.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o", Product.class);
+			query = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o", Product.class);
 			productList = query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,27 +40,29 @@ public class MyController {
 	}
 
 	@GetMapping("/products/{level1}/{level2}")
-	public List<Product> getProductByCategory(@PathVariable("level1") String level1, @PathVariable("level2") String level2) {
-	    EntityManager entityManager = null;
-	    List<Product> product = null;
-	    try {
-	        entityManager = DBUtility.getEntityManager();
-	        String query1 = "SELECT o FROM Product o JOIN category c ON o.id=c.id WHERE c.level1 = :level1 AND c.level2 = :level2";
-	        TypedQuery<Product> typedQuery = entityManager.createQuery(query1, Product.class);
-	        typedQuery.setParameter("level1", level1);
-	        typedQuery.setParameter("level2", level2);
-	        product = typedQuery.getResultList();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        if (entityManager != null && entityManager.isOpen()) {
-	            entityManager.close();
-	        }
-	    }
-	    return product;
+	public List<Product> getProductByCategory(@PathVariable("level1") String level1,
+			@PathVariable("level2") String level2) {
+		EntityManager entityManager = null;
+		List<Product> product = null;
+		TypedQuery<Product> typedQuery = null;
+		try {
+			entityManager = DBUtility.getEntityManager();
+			typedQuery = entityManager.createQuery(
+					"SELECT o FROM " + Product.class.getSimpleName() + " o JOIN " + Category.class.getSimpleName()
+							+ " c ON o.categoryid = c.id WHERE c.level1 = :level1 AND c.level2 = :level2",
+					Product.class);
+			typedQuery.setParameter("level1", level1);
+			typedQuery.setParameter("level2", level2);
+			product = typedQuery.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (entityManager != null && entityManager.isOpen()) {
+				entityManager.close();
+			}
+		}
+		return product;
 	}
-
-
 
 	@GetMapping("/products/{productId}")
 	public Product getProductById(@PathVariable("productId") Long productId) {
