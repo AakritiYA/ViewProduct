@@ -1,5 +1,6 @@
 package com.springrest.demo.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,10 +17,13 @@ public @Data class ProductAttribute {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long attributeid;
 
+	@Column
 	private Long productid;
 
+	@Column
 	private String color;
 
+	@Column
 	private String size;
 
 }

@@ -19,17 +19,26 @@ public class MyController {
 
 	@GetMapping("/products")
 	public List<Product> getAllProducts() {
-		EntityManager entityManager = DBUtility.getEntityManager();
-		TypedQuery<Product> query = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o",
-				Product.class);
-		return query.getResultList();
+		EntityManager entityManager = null;
+		List<Product> productList = null;
+		try {
+			entityManager = DBUtility.getEntityManager();
+			TypedQuery<Product> query = entityManager
+					.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o", Product.class);
+			productList = query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (entityManager != null && entityManager.isOpen()) {
+				entityManager.close();
+			}
+		}
+		return productList;
 	}
-
 
 	@GetMapping("/products/{level1}/{level2}")
 	public Product getProductByTitleAndCategoryId(@PathVariable("level1") String level1,
 			@PathVariable("level2") String level2) {
-
 		EntityManager entityManager = DBUtility.getEntityManager();
 		String query1 = "SELECT * FROM product " + "JOIN category ON product.category_id = category.id "
 				+ "WHERE level1 = :level1 AND level2 = :level2;";
@@ -40,14 +49,25 @@ public class MyController {
 	}
 
 	@GetMapping("/products/{productId}")
-	public Product getProductById(@PathVariable Long id) {
-		EntityManager entityManager = DBUtility.getEntityManager();
-		return entityManager.find(Product.class, id);
+	public Product getProductById(@PathVariable("productId") Long productId) {
+		EntityManager entityManager = null;
+		 Product product = null;
+		try {
+			entityManager = DBUtility.getEntityManager();
+			product = entityManager.find(Product.class, productId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (entityManager != null && entityManager.isOpen()) {
+				entityManager.close();
+			}
+		}
+		return product;
 	}
 
 	@PostMapping("/products")
 	public Product addProduct(@RequestBody Product product) {
-		
+		Product result = null;
 		EntityManager entityManager = null;
 		EntityTransaction transaction = null;
 		try {
@@ -56,17 +76,20 @@ public class MyController {
 			transaction.begin();
 			entityManager.persist(product);
 			transaction.commit();
+			result = product;
 		} catch (RollbackException e) {
 			if (transaction != null && transaction.isActive()) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-		} finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
 			if (entityManager != null && entityManager.isOpen()) {
 				entityManager.close();
 			}
 		}
-		return product;
+		return result;
 	}
 
 }
