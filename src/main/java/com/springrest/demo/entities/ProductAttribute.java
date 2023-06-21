@@ -14,8 +14,7 @@ public class ProductAttribute {
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long attributeid;
 	 
-	 @ManyToOne
-	 private Product product;
+	 private Long productid;
 
 	 private String color;
 	 private String size;
@@ -60,12 +59,4 @@ public class ProductAttribute {
 	 public String toString() {
 		return "ProductAttribute [attributeid=" + attributeid + ", color=" + color + ", size=" + size + "]";
 		}
-	 
-	 public void setProduct(Product product) {
-	        this.product = product;
-	    }
-
-	    public Product getProduct() {
-	        return product;
-	    }
 }

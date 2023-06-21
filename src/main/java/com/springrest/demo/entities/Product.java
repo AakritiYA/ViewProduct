@@ -15,8 +15,6 @@ import javax.persistence.Table;
 @Table(name = "product")
 public class Product {
 
-    private static Product instance;  // Static instance variable
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,17 +36,6 @@ public class Product {
         this.price = price;
         this.description = description;
         this.attributes = new ArrayList<>();
-    }
-
-    public static Product getInstance(String title, double price, String description) {
-        if (instance == null) {
-            synchronized (Product.class) {
-                if (instance == null) {
-                    instance = new Product(title, price, description);
-                }
-            }
-        }
-        return instance;
     }
 
     public Long getId() {
@@ -81,15 +68,6 @@ public class Product {
 
     public List<ProductAttribute> getAttributes() {
         return attributes;
-    }
-
-    public void setAttributes(List<ProductAttribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public void addAttribute(ProductAttribute attribute) {
-        attributes.add(attribute);
-        attribute.setProduct(this);
     }
 
     @Override
