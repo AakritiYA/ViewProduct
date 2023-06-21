@@ -37,8 +37,7 @@ public class MyController {
 	}
 
 	@GetMapping("/products/{level1}/{level2}")
-	public Product getProductByTitleAndCategoryId(@PathVariable("level1") String level1,
-			@PathVariable("level2") String level2) {
+	public Product getProductByCategory(@PathVariable("level1") String level1, @PathVariable("level2") String level2) {
 		EntityManager entityManager = DBUtility.getEntityManager();
 		String query1 = "SELECT * FROM product " + "JOIN category ON product.category_id = category.id "
 				+ "WHERE level1 = :level1 AND level2 = :level2;";
@@ -51,7 +50,7 @@ public class MyController {
 	@GetMapping("/products/{productId}")
 	public Product getProductById(@PathVariable("productId") Long productId) {
 		EntityManager entityManager = null;
-		 Product product = null;
+		Product product = null;
 		try {
 			entityManager = DBUtility.getEntityManager();
 			product = entityManager.find(Product.class, productId);
@@ -84,7 +83,7 @@ public class MyController {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			if (entityManager != null && entityManager.isOpen()) {
 				entityManager.close();
 			}

@@ -7,8 +7,6 @@
 		<class>com.springrest.demo.entities.Product</class>
 		<class>com.springrest.demo.entities.ProductAttribute</class>
 
-		<!-- Add more entity classes if needed -->
-
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/ecom" />
