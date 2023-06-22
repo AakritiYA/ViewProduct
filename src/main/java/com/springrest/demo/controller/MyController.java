@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
+import javax.persistence.QueryTimeoutException;
 import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 
@@ -28,8 +30,13 @@ public class MyController {
 		try {
 			entityManager = DBUtility.getEntityManager();
 			query = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o", Product.class);
+			query.setHint("javax.persistence.query.timeout", 8000);
 			productList = query.getResultList();
-		} catch (Exception e) {
+		} catch (QueryTimeoutException e) {
+			e.printStackTrace();
+		}catch (PersistenceException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (entityManager != null && entityManager.isOpen()) {
@@ -47,8 +54,7 @@ public class MyController {
 		TypedQuery<Product> typedQuery = null;
 		try {
 			entityManager = DBUtility.getEntityManager();
-			typedQuery = entityManager.createQuery(
-					"SELECT o FROM " + Product.class.getSimpleName() + " o JOIN " + Category.class.getSimpleName()
+			typedQuery = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o JOIN " + Category.class.getSimpleName()
 							+ " c ON o.categoryid = c.id WHERE c.level1 = :level1 AND c.level2 = :level2",
 					Product.class);
 			typedQuery.setParameter("level1", level1);
@@ -71,7 +77,15 @@ public class MyController {
 		try {
 			entityManager = DBUtility.getEntityManager();
 			product = entityManager.find(Product.class, productId);
-		} catch (Exception e) {
+			//if it null it gave null pointer exception.
+			if (product != null) {
+	            return product;
+	        } else {
+	            return null;
+	        }
+
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (entityManager != null && entityManager.isOpen()) {
