@@ -77,13 +77,6 @@ public class MyController {
 		try {
 			entityManager = DBUtility.getEntityManager();
 			product = entityManager.find(Product.class, productId);
-			//if it null it gave null pointer exception.
-			if (product != null) {
-	            return product;
-	        } else {
-	            return null;
-	        }
-
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
