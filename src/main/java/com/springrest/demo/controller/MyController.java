@@ -34,9 +34,9 @@ public class MyController {
 			productList = query.getResultList();
 		} catch (QueryTimeoutException e) {
 			e.printStackTrace();
-		}catch (PersistenceException e) {
+		} catch (PersistenceException e) {
 			e.printStackTrace();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (entityManager != null && entityManager.isOpen()) {
@@ -54,7 +54,8 @@ public class MyController {
 		TypedQuery<Product> typedQuery = null;
 		try {
 			entityManager = DBUtility.getEntityManager();
-			typedQuery = entityManager.createQuery("SELECT o FROM " + Product.class.getSimpleName() + " o JOIN " + Category.class.getSimpleName()
+			typedQuery = entityManager.createQuery(
+					"SELECT o FROM " + Product.class.getSimpleName() + " o JOIN " + Category.class.getSimpleName()
 							+ " c ON o.categoryid = c.id WHERE c.level1 = :level1 AND c.level2 = :level2",
 					Product.class);
 			typedQuery.setParameter("level1", level1);
@@ -77,8 +78,13 @@ public class MyController {
 		try {
 			entityManager = DBUtility.getEntityManager();
 			product = entityManager.find(Product.class, productId);
-		} 
-		catch (Exception e) {
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (entityManager != null && entityManager.isOpen()) {
@@ -104,6 +110,8 @@ public class MyController {
 			if (transaction != null && transaction.isActive()) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} catch (PersistenceException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
