@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "product")
@@ -18,15 +20,15 @@ public @Data class Product {
 	private Long id;
 
 	@Column(nullable = false)
-	private String title;
+	private @Getter @Setter String title;
 
 	@Column(nullable = false)
-	private double price;
+	private @Getter @Setter double price;
 
 	@Column
-	private String description;
+	private @Getter @Setter String description;
 
 	@Column
-	private Long categoryid;
+	private @Getter @Setter Long categoryid;
 
 }

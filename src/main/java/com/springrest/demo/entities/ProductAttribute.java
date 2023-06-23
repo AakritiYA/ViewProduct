@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "attribute")
@@ -18,12 +20,12 @@ public @Data class ProductAttribute {
 	private Long attributeid;
 
 	@Column
-	private Long productid;
+	private @Getter @Setter Long productid;
 
 	@Column
-	private String color;
+	private @Getter @Setter String color;
 
 	@Column
-	private String size;
+	private @Getter @Setter String size;
 
 }

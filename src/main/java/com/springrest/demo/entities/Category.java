@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "category")
@@ -18,9 +20,9 @@ public @Data class Category {
 	private Long id;
 
 	@Column(name = "level1", nullable = false)
-	private String level1;
+	private @Getter @Setter String level1;
 
 	@Column(name = "level2", nullable = false)
-	private String level2;
+	private @Getter @Setter String level2;
 
 }

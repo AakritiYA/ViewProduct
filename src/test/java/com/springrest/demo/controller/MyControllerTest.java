@@ -11,10 +11,21 @@ class MyControllerTest {
 	@Test
 	void getProductById() {
 		Product result;
-		MyController ctrl;
-		ctrl = new MyController();
-		result = ctrl.getProductById(1L);
+		MyController controller;
+		controller = new MyController();
+		result = controller.getProductById(1L);
 		Assert.isTrue(null != result);
 	}
-
+	
+	@Test
+	void getProductByIdTest() {
+	    Product testProduct = new Product();
+	    
+	}
+	
+	@Test
+	void getAllProductsTest() {
+		
+	}
+	
 }
